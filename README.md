@@ -17,7 +17,6 @@ The bot watches saved Nado wallets for liquidation risk and margin health, and i
 
 `/fundingarb` compares Nado against:
 
-- Nado
 - Pacifica
 - Hyperliquid
 - TradeXYZ
