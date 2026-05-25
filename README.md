@@ -74,10 +74,6 @@ See `.env.example` for all options.
 | `GLOBAL_FUNDING_ALERTS` | Market-wide funding alerts |
 | `LIQUIDATION_FEED_ALERT` | Personal liquidation feed alerts |
 
-## Data
-
-State is stored in `data/state.json` (last funding values, watches, event cursors). Not committed to git.
-
 ## License
 
 MIT
