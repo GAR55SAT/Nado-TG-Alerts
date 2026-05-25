@@ -1,16 +1,30 @@
 # Nado TG Alerts
 
-Telegram bot for [Nado](https://nado.xyz) perp DEX alerts: funding rate changes, liquidation feed, and personal account monitoring.
+Telegram bot for [Nado](https://nado.xyz) risk monitoring and funding arbitrage discovery.
+
+The bot watches saved Nado wallets for liquidation risk and margin health, and includes a cross-exchange funding screener that compares Nado funding against other venues using annualized APR.
 
 ## Features
 
-- **Global funding alerts** — disabled by default; use `/nadofunding` or `/fundingarb` manually
-- **Liquidation feed** — optional alerts for accounts at liquidation risk
-- **Personal account watch** (`/addwallet`) — for your wallet:
-  - appears on liquidation feed
-  - actual `liquidate_subaccount` events
-  - low maintenance health
-  - funding changes on markets where you have open positions
+- **Wallet monitoring** — save wallets and receive liquidation-risk alerts.
+- **Margin health alerts** — warns when maintenance health drops below the configured threshold.
+- **Liquidation events** — alerts when a saved account is liquidated on Nado.
+- **Nado funding screener** — shows Nado markets with high positive or negative annualized funding.
+- **Funding arbitrage screener** — compares Nado funding against other venues and highlights large APR spreads.
+- **Telegram command menu** — commands appear in Telegram when typing `/`.
+
+## Funding Arbitrage Venues
+
+`/fundingarb` compares Nado against:
+
+- Nado
+- Pacifica
+- Hyperliquid
+- TradeXYZ
+- Variational
+- RISEx
+
+Funding rates are normalized to annual APR before comparison.
 
 ## Commands
 
@@ -18,13 +32,11 @@ Telegram bot for [Nado](https://nado.xyz) perp DEX alerts: funding rate changes,
 |---------|-------------|
 | `/start` | Welcome + all commands explained |
 | `/help` | Command reference |
-| `/addwallet 0x... [name]` | Save wallet for alerts & positions |
+| `/addwallet 0x...` | Save wallet for alerts & positions |
 | `/removewallet 0x...` | Remove saved wallet |
 | `/wallets` | Your saved wallets |
 | `/nadofunding` | Nado funding opportunities (|APR| ≥ 10%) |
-| `/funding` | Alias for `/nadofunding` |
 | `/fundingarb` | Cross-exchange funding arb vs Nado (spread ≥ 30% APR) |
-| `/farb` | Alias for `/fundingarb` |
 | `/positions [0x...]` | Positions: value, entry, PnL, est. liq price, funding |
 | `/health [0x...]` | Margin health |
 
@@ -40,7 +52,15 @@ copy .env.example .env
 python run.py
 ```
 
-### Get Telegram chat ID
+### Telegram setup
+
+Create a bot with [@BotFather](https://t.me/BotFather), copy the API token, and put it in `.env`:
+
+```env
+TELEGRAM_BOT_TOKEN=your_bot_token_here
+```
+
+Get your Telegram chat ID:
 
 1. Start the bot and send `/start`
 2. Copy the chat ID from the reply, or use [@userinfobot](https://t.me/userinfobot)
@@ -49,11 +69,17 @@ python run.py
 ### VPS (production)
 
 ```bash
+git clone https://github.com/YOUR_USERNAME/Nado-TG-Alerts.git
+cd Nado-TG-Alerts
+python3 -m venv .venv
+source .venv/bin/activate
 pip install -r requirements.txt
-# systemd unit example:
-# ExecStart=/path/to/.venv/bin/python /path/to/run.py
-# WorkingDirectory=/path/to/Nado TG Alerts
+cp .env.example .env
+# Edit .env, then run:
+python run.py
 ```
+
+For 24/7 operation, run the bot with `systemd` or another process manager.
 
 ## Environment
 
@@ -73,6 +99,10 @@ See `.env.example` for all options.
 | `FUNDING_ARB_MAX_RESULTS` | Max rows in `/fundingarb` (default 8) |
 | `GLOBAL_FUNDING_ALERTS` | Market-wide funding alerts |
 | `LIQUIDATION_FEED_ALERT` | Personal liquidation feed alerts |
+
+## Disclaimer
+
+Funding APR is indicative and can change quickly. Always check liquidity, fees, slippage, settlement timing, and position risk before trading.
 
 ## License
 
