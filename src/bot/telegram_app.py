@@ -3,7 +3,7 @@ from __future__ import annotations
 import logging
 import re
 
-from telegram import Update
+from telegram import BotCommand, Update
 from telegram.constants import ParseMode
 from telegram.ext import Application, CommandHandler, ContextTypes
 
@@ -31,6 +31,18 @@ from src.storage.state import StateStore
 logger = logging.getLogger(__name__)
 
 WALLET_RE = re.compile(r"^0x[a-fA-F0-9]{40}$")
+
+BOT_COMMANDS = [
+    BotCommand("start", "Welcome and quick setup"),
+    BotCommand("help", "Show command list"),
+    BotCommand("addwallet", "Save a wallet for alerts"),
+    BotCommand("removewallet", "Remove a saved wallet"),
+    BotCommand("wallets", "List saved wallets"),
+    BotCommand("nadofunding", "Nado funding opportunities"),
+    BotCommand("fundingarb", "Funding arbitrage vs Nado"),
+    BotCommand("positions", "Open positions and PnL"),
+    BotCommand("health", "Margin health and liquidation risk"),
+]
 
 
 class TelegramBotApp:
@@ -68,6 +80,9 @@ class TelegramBotApp:
         ]
         for name, callback in handlers:
             self.application.add_handler(CommandHandler(name, callback))
+
+    async def set_command_menu(self) -> None:
+        await self.application.bot.set_my_commands(BOT_COMMANDS)
 
     async def send_alert(self, text: str, chat_ids: list[int] | None = None) -> None:
         targets = chat_ids or self.settings.default_chat_ids

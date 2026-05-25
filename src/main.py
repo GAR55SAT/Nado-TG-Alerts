@@ -42,6 +42,7 @@ async def main() -> None:
     monitor = MonitorService(client, settings, bot_app.state, on_alert)
 
     await bot_app.application.initialize()
+    await bot_app.set_command_menu()
     await bot_app.application.start()
     await bot_app.application.updater.start_polling(drop_pending_updates=True)
 
