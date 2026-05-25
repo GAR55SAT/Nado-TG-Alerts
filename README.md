@@ -2,7 +2,7 @@
 
 Telegram bot for [Nado](https://nado.xyz) risk monitoring and funding arbitrage discovery.
 
-The bot watches saved Nado wallets for liquidation risk and margin health, and includes a cross-exchange funding screener that compares Nado funding against other venues using annualized APR.
+The bot watches saved wallets and Nado accounts for liquidation risk and margin health, and includes a cross-exchange funding screener that compares Nado funding against other venues using annualized APR.
 
 Try it on Telegram: [@Nado_alerts1_bot](https://t.me/Nado_alerts1_bot)
 
